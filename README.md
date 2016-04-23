@@ -7,7 +7,7 @@ install bower
 
 go to the folder posist
 
-open git bash on posist folder
+open git bash on posistPractical folder --> cd posistPractical
 
 run below command<br/>
 node server.js
