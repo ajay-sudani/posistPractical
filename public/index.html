@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+ <title>Posist</title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" href="/bower_components/angular-material/angular-material.css">
+<link rel="stylesheet" href="/bower_components/angular-ui-bootstrap/dist/ui-bootstrap-csp.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<body ng-app="app">
+     
+     <!-- The actual modal template, just a bit o bootstrap -->
+     <script type="text/ng-template" id="deleteCustomerModal.html">
+         <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Do You Want to Delete ? Yes or No?</h4>
+              </div>
+              <div class="modal-body">
+                <p>It's your call...</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" ng-click="close('Yes')" class="btn btn-primary" data-dismiss="modal">Yes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+     </script>
+
+<script type="text/ng-template" id="editCustomerModal.html">
+  <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Edit Customer Record</h4>
+              </div>
+
+        <form name="editDataField">
+              <md-content class="autoScroll">
+
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+          <input type="text" ng-model="customerName" name="customerName" placeholder="Enter name" required></input>
+        </md-input-container>
+
+        <div ng-messages="editDataField.customerName.$error" ng-if="editDataField.customerName.$touched" class="help-block">
+          <div ng-message="required">
+            You forgot to enter Name...
+          </div>
+        </div>
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+        <input type="number" ng-model="customernumber" name="customernumber" placeholder="Enter Mobile number" ng-minlength="10" ng-maxlength="10" required></input>
+        </md-input-container>
+
+		<div ng-messages="editDataField.customernumber.$error" ng-if="editDataField.customernumber.$touched" class="help-block">
+			<p ng-message="minlength">Phone Number contain only 10 digits...</p>
+	        <p ng-message="maxlength">Phone Number contain only 10 digits...</p>
+	        <p ng-message="required">Phone Number is required...</p>
+        </div>
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+        <input type="number" ng-model="customerPhone" name="customerPhone" placeholder="Enter phone number"></input><br/>
+        </md-input-container>
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+         <textarea ng-model="customeraddress" name="customeraddress" placeholder="Enter Address" ng-minlength="7" required></textarea>
+        </md-input-container>
+        <div ng-messages="editDataField.customeraddress.$error" ng-if="editDataField.customeraddress.$touched" class="help-block">
+          <div ng-message="minlength">Your Address is too short...</div>
+        	<div ng-message="required">Address is required...</div>
+        </div>
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+         <input type="text" ng-model="DOB" name="DOB" placeholder="dd/mm/yyyy" ng-pattern='/^\d{2}[/]\d{2}[/]\d{4}$/' required=""></input>
+        </md-input-container>
+
+        <div ng-messages="editDataField.DOB.$error" ng-if="editDataField.DOB.$touched" class="help-block">
+        	<div ng-message="pattern">DOB should be in DD/MM/YYYY format...</div>
+          <div ng-message="required">DOB is required...</div>
+        </div> 
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+         <input type="email" ng-model="email" name="email" placeholder="Enter your email" ng-pattern="/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/" required=""></input>
+        </md-input-container>
+
+        <div ng-messages="editDataField.email.$error" ng-if="!editDataField.email.$touched" class="help-block">
+        	<div ng-message="pattern">Enter valid email...</div>
+          <div ng-message="required">Email is required...</div>
+        </div>        
+
+      </md-content>
+      </form>
+              
+              <div class="modal-footer">
+                <button type="button" ng-disabled="editDataField.$invalid" ng-click="close('Save')" class="btn btn-default" data-dismiss="modal">Save</button>
+                <button type="button" ng-click="close('Cancel')" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+</script>
+
+
+
+
+<script type="text/ng-template" id="addCustomerModal.html">
+  <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Edit Customer Record</h4>
+              </div>
+
+        <form name="editDataField">
+              <md-content class="autoScroll">
+
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+          <input type="text" ng-model="customerName" name="customerName" placeholder="Enter name" required></input>
+        </md-input-container>
+
+        <div ng-messages="editDataField.customerName.$error" ng-if="editDataField.customerName.$touched" class="help-block">
+          <div ng-message="required">
+            You forgot to enter Name...
+          </div>
+        </div>
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+        <input type="number" ng-model="customernumber" name="customernumber" placeholder="Enter Mobile number" ng-minlength="10" ng-maxlength="10" required></input>
+        </md-input-container>
+
+		<div ng-messages="editDataField.customernumber.$error" ng-if="editDataField.customernumber.$touched" class="help-block">
+			<p ng-message="minlength">Phone Number contain only 10 digits...</p>
+	        <p ng-message="maxlength">Phone Number contain only 10 digits...</p>
+	        <p ng-message="required">Phone Number is required...</p>
+        </div>
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+        <input type="number" ng-model="customerPhone" name="customerPhone" placeholder="Enter phone number"></input><br/>
+        </md-input-container>
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+         <textarea ng-model="address1" name="address1" placeholder="Enter Address" ng-minlength="7" required></textarea>
+        </md-input-container>
+        <div ng-messages="editDataField.address1.$error" ng-if="editDataField.address1.$touched" class="help-block">
+          <div ng-message="minlength">Your Address is too short...</div>
+        	<div ng-message="required">Address is required...</div>
+        </div>
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+         <input type="text" ng-model="DOB" name="DOB" placeholder="dd/mm/yyyy" ng-pattern='/^\d{2}[/]\d{2}[/]\d{4}$/'></input>
+        </md-input-container>
+
+        <div ng-messages="editDataField.DOB.$error" ng-if="editDataField.DOB.$touched" class="help-block">
+        	<div ng-message="pattern">DOB should be in DD/MM/YYYY format...</div>
+        </div> 
+
+        <md-input-container class="md-block" style="margin-top: 40px;">
+         <input type="email" ng-model="email" name="email" placeholder="Enter your email" ng-pattern="/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/"></input>
+        </md-input-container>
+
+        <div ng-messages="editDataField.email.$error" ng-if="editDataField.email.$touched" class="help-block">
+        	<div ng-message="pattern">Enter valid email...</div>
+        </div>        
+
+      </md-content>
+      </form>
+              
+              <div class="modal-footer">
+                <button type="button" ng-disabled="editDataField.$invalid" ng-click="close('Save')" class="btn btn-default" data-dismiss="modal">Save</button>
+                <button type="button" ng-click="close('Cancel')" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+</script>
+    
+
+
+
+
+
+
+<div ng-controller="myCtrl">
+
+<h3 style="text-align: center;">Filter Customer Data By :  </h3>
+      <md-content class="autoScroll" style="display: flex;">
+        <md-input-container class="md-block">
+        <input type="text" ng-model="name" placeholder="Name" />
+        </md-input-container>
+        <md-input-container class="md-block">
+        <input type="text" ng-model="mobile" placeholder="Mobile" />
+        </md-input-container>
+        <md-input-container class="md-block">
+        <input type="text" ng-model="phone" placeholder="Phone" />
+        </md-input-container>
+        <md-input-container class="md-block">
+        <input type="text" ng-model="DOB" placeholder="DOB" />
+        </md-input-container>
+        <md-input-container class="md-block">
+        <input type="text" ng-model="address" placeholder="Address" />
+        </md-input-container>
+        <button name="add" class="btn btn-success" ng-click="addCustomer()">ADD CUSTOMER</button>
+        <br/>
+      </md-content>
+
+
+<div class="row">
+	<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 " ng-repeat="data in dataC |filter : {name: name,mobile:mobile,phone:phone,DOB:DOB,address:address}">
+	<div class="caCard">
+		<p>Name : {{data.name}}</p>
+		<p>Number : {{data.mobile}}</p>
+		<p>Phone : {{data.phone}}</p>
+		<p>DOB : {{data.DOB}}</p>
+		<p>Address : {{data.address}}</p>
+		<div style="text-align: center;">
+			<button class="btn btn-success">REPORT</button>
+			<a  class="btn btn-success"  ng-click="editCustomer($index)">EDIT</a>
+			<a  class="btn btn-danger" href ng-click="deleteCustomer($index)">DELETE</a>
+		</div>
+	</div>
+	</div>
+
+</div>
+
+
+	
+<!-- <div ng-show="editDataField">
+		Name : <input type="text" ng-model="editName" name="customerName" placeholder="Enter name"></input><br/>
+		Number : <input type="number" ng-model="editNumber" name="customernumber" placeholder="Enter Mobile number"></input><br/>
+		Phone Number : <input type="number" ng-model="editPhone" name="customerPhone" placeholder="Enter phone number"></input><br/>
+		Address : <textarea ng-model="editAddress" name="address1" placeholder="Enter Address"></textarea>
+		DOB : <input type="text" ng-model="editDOB" name="DOB" placeholder="dd/mm/yyyy"></input><br/>
+		<button ng-click="save()">SAVE</button>
+		<button ng-click="cancle()">CANCLE</button>
+	
+</div> -->
+
+
+	
+	
+
+	
+	
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+
+
+<script src="https://rawgit.com/dwmkerr/angular-modal-service/master/dst/angular-modal-service.js"></script>
+<script type="text/javascript" src="bower_components/angular-messages/angular-messages.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="/bower_components/angular-aria/angular-aria.js"></script>
+
+<script src="/bower_components/angular-animate/angular-animate.js"></script>
+
+<script src="/bower_components/angular-material/angular-material.js"></script>
+
+<script type="text/javascript" src="app.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+

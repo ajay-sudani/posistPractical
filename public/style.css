@@ -1,0 +1,20 @@
+body{
+	background-color: #eee !important;
+}
+
+.caCard {
+    padding: 5px;
+    background-color: #1abc9c;
+    border-radius: 15px;
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    margin: 20px;
+}
+
+.acc-tabs {
+    background: #d6d6d6;
+	display: block;
+    text-align: center;
+    white-space: nowrap;
+}
