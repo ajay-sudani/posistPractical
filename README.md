@@ -1,11 +1,9 @@
 # posistPractical
 Practical 
 
-install node
+You need to install node and bower on your PC
 
-install bower
-
-go to the folder posist
+clone the project using git.
 
 open git bash on posistPractical folder --> cd posistPractical
 
